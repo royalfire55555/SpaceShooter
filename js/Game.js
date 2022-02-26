@@ -7,7 +7,27 @@ class Game {
     this.eBullets = [];
   }
 
-  join() {}
+  join() {
+    console.log("Joining game");
+    var data = database.ref("players/player").on("value", (data) => {
+      var data = data.val();
+      if (data.name) {
+        console.log("creating enemy");
+        database.ref("players/enemy").set({
+          name: this.name,
+          posX: this.player.x,
+          posY: this.player.y,
+        });
+      } else {
+        console.log("creating player");
+        database.ref("players/player").set({
+          name: this.name,
+          posX: this.player.x,
+          posY: this.player.y,
+        });
+      }
+    });
+  }
 
   createPlayer() {
     this.player = createSprite(this.x, this.y);

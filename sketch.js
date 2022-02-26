@@ -1,3 +1,5 @@
+var database = firebase.database();
+
 var bgImg;
 var playerImg;
 var enemyImg;
@@ -5,7 +7,7 @@ var playerBulletImg;
 var enemyBulletImg;
 
 var playerName = getName();
-var game = new Game(playerName, 700 / 2, 480);
+var game;
 
 function preload() {
   bgImg = loadImage("./assets/space.jpg");
@@ -17,7 +19,9 @@ function preload() {
 
 function setup() {
   canvas = createCanvas(700, 500);
+  game = new Game(playerName, 700 / 2, 480);
   game.createPlayer();
+  game.join();
 }
 
 function draw() {
