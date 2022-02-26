@@ -39,3 +39,7 @@ function getName() {
 
     return "";
 }
+
+function keyReleased() {
+    game.createBullet()
+}
