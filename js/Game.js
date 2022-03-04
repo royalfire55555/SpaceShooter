@@ -11,10 +11,10 @@ class Game {
     console.log("Joining game");
     var playerCountRef = database.ref("playerCount");
     console.log();
-    // playerCountRef.on("value", function (data) {
-    //   console.log(data.val())
-    //   this.playerCount = data.val();
-    // });
+    this.playerCount = 3;
+    playerCountRef.on("value", function (data) {
+      this.playerCount = 2;
+    });
     console.log(this.playerCount);
   }
 
