@@ -9,25 +9,13 @@ class Game {
 
   join() {
     console.log("Joining game");
-    var data = database.ref("players/player").on("value", (data) => {
-      this.playerData = data.val();
-    });
-
-    if (playerData.name) {
-      console.log("creating enemy");
-      database.ref("players/enemy").set({
-        name: this.name,
-        posX: this.player.x,
-        posY: this.player.y,
-      });
-    } else {
-      console.log("creating player");
-      database.ref("players/player").set({
-        name: this.name,
-        posX: this.player.x,
-        posY: this.player.y,
-      });
-    }
+    var playerCountRef = database.ref("playerCount");
+    console.log();
+    // playerCountRef.on("value", function (data) {
+    //   console.log(data.val())
+    //   this.playerCount = data.val();
+    // });
+    console.log(this.playerCount);
   }
 
   createPlayer() {

@@ -6,6 +6,8 @@ var enemyImg;
 var playerBulletImg;
 var enemyBulletImg;
 
+var playerData;
+
 var playerName = getName();
 var game;
 
