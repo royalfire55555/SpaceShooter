@@ -10,8 +10,10 @@ class Game {
   join() {
     console.log("Joining game");
     var data = database.ref("players/player").on("value", (data) => {
-      var data = data.val();
-      if (data.name) {
+      this.playerData = data.val();
+    });
+
+    if (playerData.name) {
         console.log("creating enemy");
         database.ref("players/enemy").set({
           name: this.name,
@@ -26,7 +28,6 @@ class Game {
           posY: this.player.y,
         });
       }
-    });
   }
 
   createPlayer() {
