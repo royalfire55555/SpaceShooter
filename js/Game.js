@@ -14,20 +14,20 @@ class Game {
     });
 
     if (playerData.name) {
-        console.log("creating enemy");
-        database.ref("players/enemy").set({
-          name: this.name,
-          posX: this.player.x,
-          posY: this.player.y,
-        });
-      } else {
-        console.log("creating player");
-        database.ref("players/player").set({
-          name: this.name,
-          posX: this.player.x,
-          posY: this.player.y,
-        });
-      }
+      console.log("creating enemy");
+      database.ref("players/enemy").set({
+        name: this.name,
+        posX: this.player.x,
+        posY: this.player.y,
+      });
+    } else {
+      console.log("creating player");
+      database.ref("players/player").set({
+        name: this.name,
+        posX: this.player.x,
+        posY: this.player.y,
+      });
+    }
   }
 
   createPlayer() {
