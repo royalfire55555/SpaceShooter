@@ -135,4 +135,10 @@ class Game {
       });
     return state;
   }
+
+  updateState(newState) {
+    database.ref("/").update({
+      gameState: newState
+    })
+  }
 }
