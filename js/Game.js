@@ -8,38 +8,69 @@ class Game {
     this.playerCount = 0;
   }
 
-  join(x, y) {
-    console.log("Joining game");
-    var playerCount = this.getPlayerCount()
-    console.log(playerCount)
-    if (playerCount < 1) {
-      database.ref("/").set({
-        playerCount: playerCount + 1,
-      });
-      database.ref("players/player").set({
-        name: document.cookie,
-        xPos: x,
-        yPos: y,
-      });
-    } else {
-      database.ref("/").set({
-        playerCount: playerCount + 1,
-      });
-      database.ref("players/player").set({
-        name: document.cookie,
-        xPos: x,
-        yPos: y,
-      });
-    }
+  play() {
   }
 
-  getPlayerCount() {
-    var playerCountRef = database.ref("/");
-    playerCountRef.on("value", function (data) {
-      var playerCount = data.val();
-      playerCount = playerCount.playerCount;
-      return playerCount;
-    });
+  join(x, y) {
+    console.log("Joining game");
+    var playerCountRef = database.ref("/playerCount");
+    playerCountRef
+      .get()
+      .then((data) => {
+        if (data.val() < 1) {
+          console.log("adding player");
+          database.ref("/").update({
+            playerCount: data.val() + 1,
+          });
+          console.log("updated player count by 1");
+          database.ref("players/player1").update({
+            name: document.cookie,
+            xPos: x,
+            yPos: y,
+          });
+        } else {
+          console.log("adding enemy");
+          database.ref("/").update({
+            playerCount: data.val() + 1,
+          });
+          console.log("updated player count by 1");
+          database.ref("players/player2").update({
+            name: document.cookie,
+            xPos: x,
+            yPos: y,
+          });
+        }
+      })
+      .catch((err) => {
+        database.ref("/").set({
+          playerCount: 0,
+        });
+        playerCountRef.get().then((data) => {
+          if (data.val() == 0) {
+            console.log("adding player");
+            database.ref("/").update({
+              playerCount: data.val() + 1,
+            });
+            console.log("updated player count by 1");
+            database.ref("players/player1").update({
+              name: document.cookie,
+              xPos: x,
+              yPos: y,
+            });
+          } else if (data.val() == 1) {
+            console.log("adding enemy");
+            database.ref("/").update({
+              playerCount: data.val() + 1,
+            });
+            console.log("updated player count by 1");
+            database.ref("players/player2").update({
+              name: document.cookie,
+              xPos: x,
+              yPos: y,
+            });
+          }
+        });
+      });
   }
 
   createPlayer() {
@@ -70,5 +101,38 @@ class Game {
       height
     );
     this.pBullets.push(bullet);
+  }
+
+  reset() {
+    database.ref("/").set({
+      playerCount: 0,
+    });
+    database.ref("players/player1").set({
+      name: "",
+      x: 0,
+      y: 0,
+    });
+    database.ref("players/player2").set({
+      name: "",
+      x: 0,
+      y: 0,
+    });
+  }
+
+  getState() {
+    var state = undefined;
+    var playerCountRef = database.ref("/gameState");
+    playerCountRef
+      .get()
+      .then((data) => {
+        state.replace(state, data.val());
+      })
+      .catch((err) => {
+        database.ref("/").set({
+          gameState: 0,
+        });
+        return 0;
+      });
+    return state;
   }
 }

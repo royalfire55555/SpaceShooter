@@ -7,6 +7,7 @@ var playerBulletImg;
 var enemyBulletImg;
 
 var playerData;
+var gameState;
 
 var playerName = getName();
 var game;
@@ -29,6 +30,11 @@ function setup() {
 function draw() {
   background(bgImg);
   game.update();
+  gameState = game.getState();
+  if (gameState == 0) {
+  } else if (gameState == 1) {
+    game.play();
+  }
   drawSprites();
 }
 
@@ -42,8 +48,6 @@ function getName() {
     document.cookie = name;
     return name;
   }
-
-  return "";
 }
 
 function keyReleased() {
