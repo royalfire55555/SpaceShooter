@@ -8,8 +8,7 @@ class Game {
     this.playerCount = 0;
   }
 
-  play() {
-  }
+  play() {}
 
   join(x, y) {
     console.log("Joining game");
@@ -138,7 +137,7 @@ class Game {
 
   updateState(newState) {
     database.ref("/").update({
-      gameState: newState
-    })
+      gameState: newState,
+    });
   }
 }
