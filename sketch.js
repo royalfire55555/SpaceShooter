@@ -23,7 +23,7 @@ function setup() {
   canvas = createCanvas(700, 500);
   game = new Game(playerName, 700 / 2, 480);
   game.createPlayer();
-  game.join();
+  game.join(game.x, game.y);
 }
 
 function draw() {

@@ -5,17 +5,41 @@ class Game {
     this.x = x;
     this.pBullets = [];
     this.eBullets = [];
+    this.playerCount = 0;
   }
 
-  join() {
+  join(x, y) {
     console.log("Joining game");
-    var playerCountRef = database.ref("playerCount");
-    console.log();
-    this.playerCount = 3;
+    var playerCount = this.getPlayerCount()
+    console.log(playerCount)
+    if (playerCount < 1) {
+      database.ref("/").set({
+        playerCount: playerCount + 1,
+      });
+      database.ref("players/player").set({
+        name: document.cookie,
+        xPos: x,
+        yPos: y,
+      });
+    } else {
+      database.ref("/").set({
+        playerCount: playerCount + 1,
+      });
+      database.ref("players/player").set({
+        name: document.cookie,
+        xPos: x,
+        yPos: y,
+      });
+    }
+  }
+
+  getPlayerCount() {
+    var playerCountRef = database.ref("/");
     playerCountRef.on("value", function (data) {
-      this.playerCount = 2;
+      var playerCount = data.val();
+      playerCount = playerCount.playerCount;
+      return playerCount;
     });
-    console.log(this.playerCount);
   }
 
   createPlayer() {
@@ -30,6 +54,8 @@ class Game {
 
   update() {
     this.handleInput();
+    this.x = this.player.x;
+    this.y = this.player.y;
   }
 
   handleInput() {
