@@ -16,6 +16,7 @@ class Bullet {
       this.bullet.addImage(enemyBulletImg);
       this.bullet.velocityY = 5;
       this.bullet.lifetime = h / 5;
+      this.bullet.scale = 0.1;
     }
   }
 }

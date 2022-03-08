@@ -8,6 +8,14 @@ var enemyBulletImg;
 
 var playerData;
 var gameState;
+var index;
+var playerCount;
+var enemyIndex;
+var enemyPos;
+var enemyBulletsArr = [];
+var enemyBullets = [];
+var bullets = [];
+var bulletPos = [];
 
 var playerName = getName();
 var game;
@@ -29,9 +37,14 @@ function setup() {
 
 function draw() {
   background(bgImg);
-  game.update();
-  gameState = game.getState();
+  handleExit();
+  game.update(game.x, game.y, index);
+  game.getState();
+  game.getPlayerCount();
   if (gameState == 0) {
+    if (playerCount > 1) {
+      game.updateState(1);
+    }
   } else if (gameState == 1) {
     game.play();
   }
@@ -52,4 +65,10 @@ function getName() {
 
 function keyReleased() {
   game.createBullet();
+}
+
+function handleExit() {
+  window.addEventListener("beforeunload", function (e) {
+    game.reset();
+  });
 }

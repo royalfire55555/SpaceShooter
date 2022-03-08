@@ -3,8 +3,6 @@ class Game {
     this.name = name;
     this.y = y;
     this.x = x;
-    this.pBullets = [];
-    this.eBullets = [];
     this.playerCount = 0;
   }
 
@@ -16,7 +14,9 @@ class Game {
     playerCountRef
       .get()
       .then((data) => {
-        if (data.val() < 1) {
+        if (data.val() == 0) {
+          enemyIndex = 2;
+          index = 1;
           console.log("adding player");
           database.ref("/").update({
             playerCount: data.val() + 1,
@@ -27,7 +27,9 @@ class Game {
             xPos: x,
             yPos: y,
           });
-        } else {
+        } else if (data.val() == 1) {
+          enemyIndex = 1;
+          index = 2;
           console.log("adding enemy");
           database.ref("/").update({
             playerCount: data.val() + 1,
@@ -43,6 +45,7 @@ class Game {
       .catch((err) => {
         database.ref("/").set({
           playerCount: 0,
+          gameState: 0,
         });
         playerCountRef.get().then((data) => {
           if (data.val() == 0) {
@@ -82,10 +85,27 @@ class Game {
     this.enemy.scale = 0.2;
   }
 
-  update() {
+  update(x, y, index) {
     this.handleInput();
     this.x = this.player.x;
     this.y = this.player.y;
+    this.getPlayerCount();
+    database.ref("players/player" + index).update({
+      name: document.cookie,
+      xPos: x,
+      yPos: y,
+    });
+
+    if (gameState > 0) {
+      var enemyRef = database.ref("/players/player" + enemyIndex);
+      enemyRef.get().then((data) => {
+        enemyPos = data.val();
+        enemyPos = enemyPos.xPos;
+      });
+      this.enemy.x = enemyPos;
+      this.getEnemyBullets();
+      this.uploadBullets();
+    }
   }
 
   handleInput() {
@@ -99,45 +119,71 @@ class Game {
       this.player.y,
       height
     );
-    this.pBullets.push(bullet);
+    bullets.push(bullet);
+    bulletPos.push({
+      x: this.player.x,
+      y: this.player.y,
+    });
   }
 
   reset() {
     database.ref("/").set({
+      gameState: 0,
       playerCount: 0,
-    });
-    database.ref("players/player1").set({
-      name: "",
-      x: 0,
-      y: 0,
-    });
-    database.ref("players/player2").set({
-      name: "",
-      x: 0,
-      y: 0,
     });
   }
 
   getState() {
-    var state = undefined;
-    var playerCountRef = database.ref("/gameState");
-    playerCountRef
+    var gameStateRef = database.ref("/gameState");
+    gameStateRef
       .get()
       .then((data) => {
-        state.replace(state, data.val());
+        gameState = data.val();
       })
       .catch((err) => {
-        database.ref("/").set({
+        database.ref("/").update({
           gameState: 0,
         });
-        return 0;
+        gameState = 0;
       });
-    return state;
   }
 
   updateState(newState) {
     database.ref("/").update({
       gameState: newState,
     });
+  }
+
+  getPlayerCount() {
+    var playerCountRef = database.ref("/playerCount");
+    playerCountRef.get().then((data) => {
+      playerCount = data.val();
+    });
+  }
+
+  uploadBullets() {
+    database.ref("players/player" + index).update({
+      bullets: bulletPos,
+    });
+  }
+
+  getEnemyBullets() {
+    var enemyRef = database.ref("/players/player" + enemyIndex);
+    enemyRef.get().then((data) => {
+      enemyBulletsArr = data.val();
+      enemyBulletsArr = enemyBulletsArr.bullets;
+    });
+
+    for (var i = 0; i < enemyBulletsArr; i++) {
+      console.log("created Bullet")
+      enemyBulletsArr.splice(i);
+      var bullet = new Bullet(
+        "enemyBullet",
+        enemyBulletsArr[i].x,
+        enemyBulletsArr[i].y,
+        height
+      );
+      enemyBullets.append(bullet)
+    }
   }
 }
