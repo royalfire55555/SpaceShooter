@@ -175,7 +175,7 @@ class Game {
     });
 
     for (var i = 0; i < enemyBulletsArr; i++) {
-      console.log("created Bullet")
+      console.log("created Bullet");
       enemyBulletsArr.splice(i);
       var bullet = new Bullet(
         "enemyBullet",
@@ -183,7 +183,7 @@ class Game {
         enemyBulletsArr[i].y,
         height
       );
-      enemyBullets.append(bullet)
+      enemyBullets.append(bullet);
     }
   }
 }
